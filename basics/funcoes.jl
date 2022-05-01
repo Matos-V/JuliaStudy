@@ -1,3 +1,4 @@
+##
 function diga_olá(nome)
     println("Olá $(nome)!")
 end
@@ -18,14 +19,17 @@ end
 sla = fibonacci(15)
 diga_olá("Vitor")
 
-#%%
+##
 diga_olá(nome) = println("Olá $(nome)!")
 diga_olá("GitHub")
 quadrado(x) = x^2
 quadrado(50)
 
+##
 quadrado(ones(3,3))
 
-#%%
+##
+quadrado.(ones(2,2))
+##
 olá = nome -> println("Olá $(nome)!")
 olá("pessoal")
