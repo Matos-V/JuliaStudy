@@ -1,5 +1,5 @@
 ###### While
-println("Sequencia de de base 2!")
+println("base 2 sequence!")
 n = 0
 while n <= 10
     val = 2^n
@@ -14,8 +14,8 @@ for x in 0:10
 end
 
 #%%
-frutas = ["kiwi", "umbu", "siriguela", "cajá", "cajú"]
-for x in frutas
+fruits = ["kiwi", "umbu", "siriguela", "cajá", "cajú"]
+for x in fruits
     println("Eu gosto de $(x)!")
 end
 
