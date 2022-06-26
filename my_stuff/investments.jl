@@ -42,22 +42,39 @@ mutable struct Investment
     end
 end
 
-BBAS3 = Investment("BBAS3", 34.0, 10.0, 500.0, 500.0, true)
-
-while BBAS3.n_stocks <= BBAS3.n_expected_stocks
-    BBAS3.months = BBAS3.months + 1
-    if BBAS3.reinvest_dividends
-        BBAS3.n_stocks = BBAS3.n_stocks + (BBAS3.monthly_contribution + BBAS3.n_stocks*BBAS3.dividend + BBAS3.rest)÷BBAS3.stock_price
-        BBAS3.rest = (BBAS3.monthly_contribution + BBAS3.n_stocks*BBAS3.dividend + BBAS3.rest) % BBAS3.stock_price
-    else
-        BBAS3.n_stocks = BBAS3.n_stocks + (BBAS3.monthly_contribution + BBAS3.rest)÷BBAS3.stock_price
-        BBAS3.rest = (BBAS3.monthly_contribution + BBAS3.rest) % BBAS3.stock_price
-        
+function invest_with_dividends(stock::Investment)
+    while stock.n_stocks <= stock.n_expected_stocks
+        stock.months = stock.months + 1
+        stock.n_stocks = stock.n_stocks + (stock.monthly_contribution + stock.n_stocks*stock.dividend + stock.rest)÷stock.stock_price
+        stock.rest = (stock.monthly_contribution + stock.n_stocks*stock.dividend + stock.rest) % stock.stock_price
     end
-    #global stock_price = round(stock_price * (1+ rand(-3:0.01:3)/100), digits=2)
+    stock.patrimony = stock.n_stocks*stock.stock_price + stock.rest
 end
-BBAS3.patrimony = BBAS3.n_stocks*BBAS3.stock_price + BBAS3.rest
-    
+
+function invest_without_dividends(stock::Investment)
+    while stock.n_stocks <= stock.n_expected_stocks
+        stock.months = stock.months + 1
+        stock.n_stocks = stock.n_stocks + (stock.monthly_contribution + stock.rest)÷stock.stock_price
+        stock.rest = (stock.monthly_contribution + stock.rest) % stock.stock_price
+    end
+    stock.patrimony = stock.n_stocks*stock.stock_price + stock.rest
+end
+
+BBAS3 = Investment("Banco do Brasil", #  stock_name::String
+                    34.0,   #  stock_price::Float64
+                    10.0,   #  DY_year::Float64
+                    500.0,  #  monthly_contribution::Float64
+                    1000.0,  #  expected_earning::Float64
+                    true)  #  reinvest_dividends::Bool
+
+
+# stock_price = round(stock_price * (1+ rand(-3:0.01:3)/100), digits=2)
+if BBAS3.reinvest_dividends
+    invest_with_dividends(BBAS3)
+else
+    invest_without_dividends(BBAS3)
+end
+
+
+
 println("You have acumulated $(BBAS3.n_stocks) quotas in $(BBAS3.months) months with total patrimony of \$$(round(BBAS3.patrimony,digits=2))!")
-println("O valor da cota ao final do percurso é de $(BBAS3.stock_price):")
-println(BBAS3)
